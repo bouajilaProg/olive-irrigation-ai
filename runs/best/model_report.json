@@ -1,0 +1,31 @@
+{
+    "model_name": "LGBMClassifier",
+    "date_time": "2026-02-28 09:23:50",
+    "score": 0.4605263157894737,
+    "parameters": {
+        "boosting_type": "gbdt",
+        "class_weight": null,
+        "colsample_bytree": 1.0,
+        "importance_type": "split",
+        "learning_rate": 0.1,
+        "max_depth": -1,
+        "min_child_samples": 20,
+        "min_child_weight": 0.001,
+        "min_split_gain": 0.0,
+        "n_estimators": 100,
+        "n_jobs": null,
+        "num_leaves": 31,
+        "objective": null,
+        "random_state": 42,
+        "reg_alpha": 0.0,
+        "reg_lambda": 0.0,
+        "subsample": 1.0,
+        "subsample_for_bin": 200000,
+        "subsample_freq": 0
+    },
+    "feature_importance": {
+        "Average_SPAD": 4636.0,
+        "Temperature": 4531.0,
+        "Canopy Cover ": 2833.0
+    }
+}
