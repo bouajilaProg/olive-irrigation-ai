@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Your Grove - Olive Health AI</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .explanation-container {
+            max-width: 850px;
+            margin: 0 auto;
+            text-align: left;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        h2 {
+            color: #2d5a27;
+            margin-top: 2.5rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            color: #1e3d1a;
+            margin-top: 1.5rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: #2d5a27;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 600px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .feature-item {
+            background: #fdfdfd;
+            padding: 1.8rem;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        .icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .step-box {
+            background: #f4f7f4;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        strong {
+            color: #2d5a27;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="explanation-container">
+            <a href="/" class="back-link">← Return to Your Map</a>
+
+            <h1>A Digital Eye Over Your Olive Trees</h1>
+            <p style="font-size: 1.1rem;">You know your land better than anyone. Our technology is designed to act as a
+                <strong>Digital Scout</strong>, helping you see what’s happening in your grove even when you aren't
+                physically there.</p>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="icon">🛰️</span>
+                    <h3>Checking the "Pulse" from Space</h3>
+                    <p>Satellites pass over your farm every few days. They don't just take a photo; they measure how
+                        much <strong>light your trees are reflecting</strong>. Healthy trees reflect light differently
+                        than thirsty ones. We use this "Green Signal" (NDVI) to see how much energy your trees are
+                        producing.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="icon">🧠</span>
+                    <h3>A Smart Advisor for Your Soil</h3>
+                    <p>Our AI has been "taught" by looking at thousands of real Mediterranean olive groves. It compares
+                        your current satellite signal with history and weather data to act like a <strong>digital
+                            agronomist</strong>, predicting exactly how much water your trees really need right now.</p>
+                </div>
+            </div>
+
+            <h2>How we calculate your results</h2>
+            <div class="step-box">
+                <p><strong>1. Location:</strong> When you click the map, we lock onto your specific trees.</p>
+            </div>
+            <div class="step-box">
+                <p><strong>2. Scouting:</strong> We pull the latest clear satellite data from the last few
+                    weeks—ignoring the clouds.</p>
+            </div>
+            <div class="step-box">
+                <p><strong>3. Deep Check:</strong> The AI looks at how "dense" your leaves are and how much chlorophyll
+                    (the green engine of the tree) is active.</p>
+            </div>
+            <div class="step-box">
+                <p><strong>4. Recommendation:</strong> We give you a simple quality rating so you know if you need to
+                    turn on the pumps or save your water.</p>
+            </div>
+
+            <h2>Why this helps your farm</h2>
+            <ul>
+                <li><strong>Save Water & Money:</strong> Don't irrigate when the trees are already happy. Save your
+                    resources for when they are truly stressed.</li>
+                <li><strong>Spot Trouble Early:</strong> Satellite data can often see stress <em>before</em> the leaves
+                    start to turn yellow or curl up.</li>
+                <li><strong>Better Oil Quality:</strong> Keeping water levels perfect ensures your olives develop the
+                    right oil content without being watery or shriveled.</li>
+                <li><strong>Peace of Mind:</strong> Check on remote plots from home, anytime.</li>
+            </ul>
+
+            <div style="margin-top: 30px; padding: 20px; background: #e8f5e9; border-radius: 8px; text-align: center;">
+                <p style="margin-bottom: 20px; font-weight: bold; color: #1e3d1a;">Ready to check your trees?</p>
+                <button onclick="window.location.href='/'" style="max-width: 250px;">Go to My Monitor</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
