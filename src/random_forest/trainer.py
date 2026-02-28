@@ -1,12 +1,12 @@
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, train_test_split
 import joblib
 import os
 
 def train_brain():
-    """Train a default RandomForest on Growth.xlsx and save model + encoder into data/.
+    """Train a default RandomForest on Growth.xlsx, report accuracy, and save.
     """
     # 1. Load the real data
     data_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data')
@@ -17,18 +17,27 @@ def train_brain():
     df['Variety_Encoded'] = le.fit_transform(df['Variety'])
     
     # 3. Features (X) and Target (y)
-    # We use Temp, SPAD, and Canopy as they are the strongest signals
     X = df[['Temperature', 'Average_SPAD', 'Canopy Cover ', 'Variety_Encoded']]
-    y = df['Irrigation Regime'] # AI learns to predict the water level needed
+    y = df['Irrigation Regime']
 
-    # 4. Train the Random Forest
+    # 4. Split for Scoring
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # 5. Train and Score
     model = RandomForestClassifier(n_estimators=100, random_state=42)
-    model.fit(X, y)
+    model.fit(X_train, y_train)
+    
+    accuracy = model.score(X_test, y_test)
+    print("-" * 30)
+    print(f"✅ AI Brain Training Score: {accuracy:.2%}")
+    print("-" * 30)
 
-    # 5. Save the Brain and the Encoder (Generic name so app doesn't care)
+    # 6. Re-train on FULL dataset for the clinical model and save
+    model.fit(X, y)
     joblib.dump(model, os.path.join(data_path, 'olive_model.pkl'))
     joblib.dump(le, os.path.join(data_path, 'variety_encoder.pkl'))
-    print("Success: AI Brain (Random Forest) trained and saved!")
+    print("🏆 Optimized Model saved to data/olive_model.pkl")
+
 
 def optimize_and_train():
     """Run a grid search to find better hyperparameters then save the best model.
@@ -66,3 +75,7 @@ def optimize_and_train():
     joblib.dump(le, os.path.join(data_path, 'variety_encoder.pkl'))
     
     print("\n🏆 Optimized AI Brain (Random Forest) saved!")
+
+if __name__ == "__main__":
+    train_brain()
+

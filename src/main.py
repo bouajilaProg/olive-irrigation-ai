@@ -1,13 +1,13 @@
 import ee
 import os
-# Fix import to use the module in the same directory
-try:
-    import olive_brain as brain
-    import train_model as trainer
-except ImportError:
-    import src.olive_brain as brain
-    import src.train_model as trainer
+import sys
 
+# Ensure we can import from src
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(current_dir)
+
+import olive_brain as brain
+from random_forest import trainer as rf_trainer
 
 # Initialize Earth Engine
 try:
@@ -17,12 +17,13 @@ except Exception as e:
     raise e
 
 # Ensure the model is trained before predicting
-data_path = os.path.join(os.path.dirname(__file__), '..', 'data')
-if not os.path.exists(os.path.join(data_path, 'olive_model.pkl')) or not os.path.exists(os.path.join(data_path, 'variety_encoder.pkl')):
-    print("Model not found. Training the AI brain first...")
-    trainer.train_model()
+base_dir = os.path.dirname(current_dir)
+data_dir = os.path.join(base_dir, 'data')
+model_path = os.path.join(data_dir, 'olive_model.pkl')
 
-
+if not os.path.exists(model_path):
+    print("Model not found. Training the AI brain (Default: Random Forest) first...")
+    rf_trainer.train_brain()
 
 # 1. Setup the location in Mahdia
 # Remember: [Longitude, Latitude]

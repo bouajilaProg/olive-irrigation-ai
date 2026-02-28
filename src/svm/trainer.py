@@ -1,12 +1,12 @@
 import pandas as pd
 from sklearn.svm import SVC
 from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, train_test_split
 import joblib
 import os
 
 def train_brain():
-    """Train a default SVM on Growth.xlsx and save model + encoder into data/.
+    """Train a default SVM on Growth.xlsx, report accuracy, and save.
     """
     # 1. Load the real data
     data_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data')
@@ -17,21 +17,27 @@ def train_brain():
     df['Variety_Encoded'] = le.fit_transform(df['Variety'])
     
     # 3. Features (X) and Target (y)
-    # We use Temp, SPAD, and Canopy as they are the strongest signals
     X = df[['Temperature', 'Average_SPAD', 'Canopy Cover ', 'Variety_Encoded']]
     y = df['Irrigation Regime']
 
-    # 4. Train the SVM
-    # Using 'rbf' kernel is common for classification problems like this
-    # probability=True is needed if we want probability estimates, but simple predict works too.
-    # We'll set probability=True in case we want confidence scores later.
-    model = SVC(kernel='rbf', probability=True, random_state=42)
-    model.fit(X, y)
+    # 4. Split for Scoring
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    # 5. Save the Brain and the Encoder (Generic name so app doesn't care)
+    # 5. Train and Score
+    model = SVC(kernel='rbf', probability=True, random_state=42)
+    model.fit(X_train, y_train)
+    
+    accuracy = model.score(X_test, y_test)
+    print("-" * 30)
+    print(f"✅ AI Brain Training Score: {accuracy:.2%}")
+    print("-" * 30)
+
+    # 6. Re-train on FULL dataset for the clinical model and save
+    model.fit(X, y)
     joblib.dump(model, os.path.join(data_path, 'olive_model.pkl'))
     joblib.dump(le, os.path.join(data_path, 'variety_encoder.pkl'))
-    print("Success: AI Brain (SVM) trained and saved!")
+    print("🏆 Optimized Model saved to data/olive_model.pkl")
+
 
 def optimize_and_train():
     """Run a grid search to find better hyperparameters for SVM then save the best model.
@@ -67,3 +73,7 @@ def optimize_and_train():
     joblib.dump(le, os.path.join(data_path, 'variety_encoder.pkl'))
     
     print("\n🏆 Optimized AI Brain (SVM) saved!")
+
+if __name__ == "__main__":
+    train_brain()
+
