@@ -4,6 +4,8 @@ from fastapi.staticfiles import StaticFiles
 import ee
 import os
 import src.olive_brain as brain
+import src.train_model as trainer
+
 
 
 # Initialize the FastAPI app
@@ -22,7 +24,8 @@ def startup_event():
         
     model_path = os.path.join(os.path.dirname(__file__), 'data', 'olive_model.pkl')
     if not os.path.exists(model_path):
-        brain.train_brain()
+        trainer.train_model()
+
 
 
 @app.get("/api/predict")

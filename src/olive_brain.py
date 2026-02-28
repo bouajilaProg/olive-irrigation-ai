@@ -1,38 +1,9 @@
 import os
 import pandas as pd
-
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import LabelEncoder
 import joblib
 
-def train_brain():
-    # 1. Load the real data
-    data_path = os.path.join(os.path.dirname(__file__), '..', 'data')
-    df = pd.read_excel(os.path.join(data_path, 'Growth.xlsx'))
-
-
-    # 2. Pre-process the 'Variety' (Text to Numbers)
-    le = LabelEncoder()
-    df['Variety_Encoded'] = le.fit_transform(df['Variety'])
-    
-    # 3. Features (X) and Target (y)
-    # We use Temp, SPAD, and Canopy as they are the strongest signals
-    X = df[['Temperature', 'Average_SPAD', 'Canopy Cover ', 'Variety_Encoded']]
-    y = df['Irrigation Regime'] # AI learns to predict the water level needed
-
-    # 4. Train the Random Forest
-    model = RandomForestClassifier(n_estimators=100, random_state=42)
-    model.fit(X, y)
-
-    # 5. Save the Brain and the Encoder
-    joblib.dump(model, os.path.join(data_path, 'olive_model.pkl'))
-    joblib.dump(le, os.path.join(data_path, 'variety_encoder.pkl'))
-    print("Success: AI Brain trained on real Mediterranean field data!")
-
-
-
-
 def predict_irrigation_need(ndvi, temp, variety='Languedoc'):
+
     # Load the trained brain
     data_path = os.path.join(os.path.dirname(__file__), '..', 'data')
     model = joblib.load(os.path.join(data_path, 'olive_model.pkl'))

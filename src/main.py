@@ -3,8 +3,11 @@ import os
 # Fix import to use the module in the same directory
 try:
     import olive_brain as brain
+    import train_model as trainer
 except ImportError:
     import src.olive_brain as brain
+    import src.train_model as trainer
+
 
 # Initialize Earth Engine
 try:
@@ -17,7 +20,8 @@ except Exception as e:
 data_path = os.path.join(os.path.dirname(__file__), '..', 'data')
 if not os.path.exists(os.path.join(data_path, 'olive_model.pkl')) or not os.path.exists(os.path.join(data_path, 'variety_encoder.pkl')):
     print("Model not found. Training the AI brain first...")
-    brain.train_brain()
+    trainer.train_model()
+
 
 
 # 1. Setup the location in Mahdia
