@@ -6,42 +6,56 @@ def predict_irrigation_need(ndvi, temp, variety='Languedoc'):
     """
     Predicts the irrigation regime based on satellite NDVI and local temperature.
     This function is MODEL-AGNOSTIC: It just loads 'olive_model.pkl' and calls .predict().
-    Whether the model is Random Forest, SVM, or XGBoost doesn't matter as long as it supports .predict().
+    
+    NOTE: 'variety' parameter is kept for API compatibility but is NO LONGER USED in the model.
     """
 
     # Load the trained brain
-    # Using '..' to go up one level from src/ to root, then into data/
-    # Correction: __file__ is inside src/, so we need to go up to project root, then to data
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     data_path = os.path.join(base_dir, 'data')
     
     model_path = os.path.join(data_path, 'olive_model.pkl')
-    encoder_path = os.path.join(data_path, 'variety_encoder.pkl')
 
     if not os.path.exists(model_path):
         return {"level": "ERROR", "message": "AI Model not found. Please train a model first!"}
 
-    model = joblib.load(model_path)
-    le = joblib.load(encoder_path)
-
+    # Load the artifact (could be just the model, or a dict with model+encoder)
+    loaded_artifact = joblib.load(model_path)
+    model = None
+    encoder = None
+    
+    if isinstance(loaded_artifact, dict) and "model" in loaded_artifact:
+        model = loaded_artifact["model"]
+        encoder = loaded_artifact.get("encoder")
+    else:
+        model = loaded_artifact
+        encoder = None
     
     # Map NDVI from satellite to field parameters the model expects:
-    # These heuristic mappings must match what was used during training (or be close approximations)
     canopy_cover = ndvi * 100
     average_spad = ndvi * 50 
     
-    try:
-        variety_encoded = le.transform([variety])[0]
-    except:
-        variety_encoded = 0 # Default if variety not found (e.g. 'unknown')
+    # Reverted to base features only (No interaction terms)
+    # Feature order MUST match trainer: ['Temperature', 'Average_SPAD', 'Canopy Cover ']
+    feature_names = [
+        'Temperature', 
+        'Average_SPAD', 
+        'Canopy Cover '
+    ]
     
-    # Model predicts the irrigation regime
-    # The feature order MUST match training: ['Temperature', 'Average_SPAD', 'Canopy Cover ', 'Variety_Encoded']
-    input_df = pd.DataFrame([[temp, average_spad, canopy_cover, variety_encoded]], 
-                            columns=['Temperature', 'Average_SPAD', 'Canopy Cover ', 'Variety_Encoded'])
+    input_df = pd.DataFrame([[
+        temp, 
+        average_spad, 
+        canopy_cover
+    ]], columns=feature_names)
     
     try:
-        predicted_regime = model.predict(input_df)[0]
+        prediction = model.predict(input_df)[0]
+        if encoder:
+            # If an encoder was saved, we must decode the numeric prediction back to string label
+            predicted_regime = encoder.inverse_transform([prediction])[0]
+        else:
+            predicted_regime = prediction
     except Exception as e:
         return {"level": "ERROR", "message": f"Prediction failed: {str(e)}"}
     
@@ -72,7 +86,6 @@ def predict_irrigation_need(ndvi, temp, variety='Languedoc'):
             "quality": "OPTIMAL"
         }
     }
-
-
+    
     res = mapping.get(predicted_regime, {"level": "UNKNOWN", "value": 0, "message": f"Unknown regime: {predicted_regime}"})
     return res
