@@ -12,6 +12,8 @@ sys.path.append(current_dir)
 import olive_brain as brain
 from random_forest import trainer as rf_trainer
 from svm import trainer as svm_trainer
+from lgbm import trainer as lgbm_trainer
+from xgb import trainer as xgb_trainer
 
 # Initialize the FastAPI app
 app = FastAPI(title="Olive Health AI", description="AI-driven irrigation recommendations")
@@ -88,6 +90,42 @@ def predict_health(lat: float, lon: float, temp: float = 25.0, variety: str = 'L
             "quality": brain_data.get("quality", "N/A")
         }
 
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/train/rf")
+def train_rf():
+    """Force re-train using Random Forest"""
+    try:
+        rf_trainer.train_brain()
+        return {"status": "success", "message": "Model re-trained using Random Forest"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/train/svm")
+def train_svm():
+    """Force re-train using SVM"""
+    try:
+        svm_trainer.train_brain()
+        return {"status": "success", "message": "Model re-trained using SVM"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/train/lgbm")
+def train_lgbm():
+    """Force re-train using LightGBM"""
+    try:
+        lgbm_trainer.train_brain()
+        return {"status": "success", "message": "Model re-trained using LightGBM"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/train/xgb")
+def train_xgb():
+    """Force re-train using XGBoost"""
+    try:
+        xgb_trainer.train_brain()
+        return {"status": "success", "message": "Model re-trained using XGBoost"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
