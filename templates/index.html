@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Olive Health AI - Satellite View</title>
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+
+<body>
+  <!-- Full Screen Loading Overlay -->
+  <div id="loader-overlay" class="loader-overlay" style="display: none;">
+    <div class="loader-content">
+      <div class="loader"></div>
+      <p>Analyzing Satellite Imagery...</p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem;">
+      <div style="text-align: left;">
+        <h1 style="margin: 0; color: #2d5a27;">Olive AI Monitor</h1>
+        <p style="color: #666; font-size: 0.9rem; margin: 0.3rem 0 0 0;">Navigate the satellite map to locate
+          your grove</p>
+      </div>
+      <a href="/explanation"
+        style="color: #2d5a27; text-decoration: underline; font-size: 0.9rem; font-weight: bold; margin-top: 0.5rem;"
+        target="_self">How it Works?</a>
+    </div>
+
+
+    <div id="map-view" class="content-layout">
+      <div id="map"></div>
+
+      <div style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div class="input-group">
+            <label>Selected Latitude</label>
+            <input type="number" id="lat" readonly>
+          </div>
+          <div class="input-group">
+            <label>Selected Longitude</label>
+            <input type="number" id="lon" readonly>
+          </div>
+          <p class="hint">Click or drag the marker to your trees.</p>
+        </div>
+
+        <div>
+          <button id="analyzeBtn" onclick="checkHealth()">Analyze Health</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results View (Hidden by default) -->
+    <div id="results-view" class="results-layout" style="display: none;">
+      <div class="gauge-container">
+        <svg class="gauge" viewBox="0 0 100 100">
+          <circle class="gauge-bg" cx="50" cy="50" r="45"></circle>
+          <circle class="gauge-fill" id="gaugeFill" cx="50" cy="50" r="45"></circle>
+          <text x="50" y="55" id="gaugeText" class="gauge-text">0%</text>
+        </svg>
+        <div id="stressLevel" class="stress-badge">Unknown</div>
+      </div>
+
+      <div class="results-info">
+        <h3>Analysis Results</h3>
+        <div id="resultContent"></div>
+        <button class="back-btn" onclick="showMap()">← Back to Map</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Custom JS -->
+  <script src="/static/js/script.js"></script>
+
+</body>
+
+</html>
