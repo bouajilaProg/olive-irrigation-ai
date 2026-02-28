@@ -26,14 +26,27 @@ This project provides a model-agnostic web service and API that translates satel
 ## Installation
 
 1. Clone the repository.
-2. Install dependencies:
-   ```bash
-   pip install fastapi uvicorn pandas scikit-learn lightgbm xgboost joblib google-earth-engine openpyxl
-   ```
+
+2. Create and activate a environment:
+
+### Using Conda
+```bash
+conda create -n olive-env python=3.10
+conda activate olive-env
+pip install -r requirements.txt
+```
+
+### Using venv
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
 3. Authenticate Google Earth Engine:
-   ```bash
-   earthengine authenticate
-   ```
+```bash
+python src/auth.py
+```
 
 ## Usage
 
